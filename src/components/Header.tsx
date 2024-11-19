@@ -1,16 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { BriefcaseIcon, BookOpenIcon, UserIcon, Bars3Icon } from '@heroicons/react/24/outline';
 import logoImage from "../assets/lomacom-logo.png";
 
 const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-md relative z-50">
-      <div className="container mx-auto flex items-center justify-between px-4 py-3">
+      <div className="container mx-auto flex items-center justify-between px-6">
         {/* Logo */}
         <img 
           src={logoImage} 
           alt="Lomacom Logo" 
-          className="h-20 w-auto md:h-28" 
+          className="h-24 w-130 md:h-18" 
         />
 
         {/* Navigation */}
@@ -21,9 +22,11 @@ const Header: React.FC = () => {
               <div className="p-4 border-b border-gray-200">
                 <h3 className="text-[#00bba3] font-extrabold text-2xl">Domestic Cleaning Near Me</h3>
                 <div className="flex justify-center mt-2">
+                  <Link to='/domestic-cleaning'>
                   <button className="bg-[#00bba3] text-white py-2 px-6 rounded-lg hover:bg-[#007c6c]">
                     Book My Cleaning
                   </button>
+                  </Link>
                 </div>
               </div>
               <div className="p-4 grid grid-cols-2 gap-x-10 gap-y-6">

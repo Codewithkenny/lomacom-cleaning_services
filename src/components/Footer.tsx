@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
                 <a href="#services" className="hover:underline">Services</a>
               </li>
               <li>
-                <a href="#contact" className="hover:underline">Contact</a>
+                <a href="/datadeletion" className="hover:underline">Security</a>
               </li>
               <li>
                 <a href="#faq" className="hover:underline">FAQ</a>

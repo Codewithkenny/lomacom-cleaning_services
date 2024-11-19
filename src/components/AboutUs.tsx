@@ -7,7 +7,7 @@ const AboutUs: React.FC = () => {
         {/* Image */}
         <div className="md:w-1/2">
           <img
-            src="https://res.cloudinary.com/pojuagbomeji/image/upload/v1731929738/about_us_kjdsnc.jpg"
+            src="https://res.cloudinary.com/pojuagbomeji/image/upload/v1732003202/aboutus-_bx7hwi.png"
             alt="About Us"
             className="rounded-lg shadow-lg w-full"
           />
