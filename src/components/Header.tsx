@@ -7,25 +7,31 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-md relative z-50">
       <div className="container mx-auto flex items-center justify-between px-6">
-        {/* Logo */}
-        <img 
-          src={logoImage} 
-          alt="Lomacom Logo" 
-          className="h-24 w-130 md:h-18" 
-        />
+        {/* Logo as a link */}
+        <Link to="/">
+          <img 
+            src={logoImage} 
+            alt="Lomacom Logo" 
+            className="h-24 w-130 md:h-18" 
+          />
+        </Link>
 
         {/* Navigation */}
         <nav className="hidden lg:flex space-x-6 items-center">
           <div className="relative group">
-            <button className="text-black hover:text-[#00bba3] font-medium">Services</button>
+            {/* Trigger dropdown on hover of this button */}
+            <button className="text-black hover:text-[#00bba3] font-medium">
+              Services
+            </button>
+            {/* Dropdown visibility controlled by hovering the button */}
             <div className="absolute left-0 mt-2 w-[400px] bg-white shadow-lg rounded-md opacity-0 group-hover:opacity-100 transition-opacity h-auto">
               <div className="p-4 border-b border-gray-200">
                 <h3 className="text-[#00bba3] font-extrabold text-2xl">Domestic Cleaning Near Me</h3>
                 <div className="flex justify-center mt-2">
                   <Link to='/domestic-cleaning'>
-                  <button className="bg-[#00bba3] text-white py-2 px-6 rounded-lg hover:bg-[#007c6c]">
-                    Book My Cleaning
-                  </button>
+                    <button className="bg-[#00bba3] text-white py-2 px-6 rounded-lg hover:bg-[#007c6c]">
+                      Book My Cleaning
+                    </button>
                   </Link>
                 </div>
               </div>

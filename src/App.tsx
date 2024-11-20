@@ -10,10 +10,14 @@ import DataDeletion from './pages/DataDeletion';
 import DomesticCleaning from './pages/DomesticCleaning';
 import Booking from './pages/Booking';
 import BookingProvider from './components/BookingContext';
-import Service from './components/BookingSteps/Services';
+import Services from './components/BookingSteps/Services';
+import Scheduling from './components/BookingSteps/Scheduling';
 import Duration from './components/BookingSteps/Duration';
 import Options from './components/BookingSteps/Options';
-import Scheduling from './components/BookingSteps/Scheduling';
+import Pets from './components/BookingSteps/Pets';
+import Calendar from './components/BookingSteps/Calender';
+import Hours from './components/BookingSteps/Hours';
+// import Signup from './components/BookingSteps/Signup';
 
 function App() {
   return (
@@ -22,63 +26,42 @@ function App() {
         <div>
           <Header />
           <Routes>
-            <Route 
-              path="/" 
-              element={
-                <>
-                  <Hero />
-                  <AboutUs />
-                  <HomeServicesCards />
-                  <Footer /> 
-                </>
-              } 
-            />
-            <Route 
-              path="/home" 
-              element={<Navigate to="/" replace />} 
-            />
-            <Route 
-              path="/datadeletion" 
-              element={<DataDeletion />} 
-            />
+            {/* Main Pages */}
+            <Route path="/" element={<><Hero /><AboutUs /><HomeServicesCards /><Footer /></>} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
+            <Route path="/datadeletion" element={<DataDeletion />} />
 
             {/* Domestic Cleaning Booking Workflow */}
-            <Route 
-              path="/domestic-cleaning/*" 
+            <Route
+              path="/domestic-cleaning/*"
               element={
                 <BookingProvider>
                   <Routes>
-                    <Route 
-                      path="booking" 
-                      element={<Booking />} 
-                    />
-                    <Route path="booking/services" element={<Service />} />
+                    <Route path="booking" element={<Booking />} />
+                    <Route path="booking/services" element={<Services />} />
+                    <Route path="booking/scheduling" element={<Scheduling />} />
                     <Route path="booking/duration" element={<Duration />} />
                     <Route path="booking/options" element={<Options />} />
-                    <Route path="booking/scheduling" element={<Scheduling />} />
-                    <Route 
-                      path="" 
+                    <Route path="booking/pets" element={<Pets />} />
+                    <Route path="booking/calender" element={<Calendar />} />
+                    <Route path="booking/session/hour" element={<Hours />} />
+                    {/* <Route path="booking/signup" element={<Signup />} /> */}
+                    <Route
+                      path=""
                       element={
                         <>
                           <DomesticCleaning />
                           <Footer />
                         </>
-                      } 
+                      }
                     />
                   </Routes>
                 </BookingProvider>
-              } 
+              }
             />
 
-            <Route 
-              path="/login" 
-              element={
-                <>
-                  <Login />
-                  <Footer /> 
-                </>
-              } 
-            />
+            {/* Login */}
+            <Route path="/login" element={<><Login /><Footer /></>} />
           </Routes>
         </div>
       </Router>
