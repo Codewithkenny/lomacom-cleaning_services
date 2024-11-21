@@ -13,7 +13,7 @@ const Scheduling = () => {
   const frequencies = ['Once a Week', 'Once a Fortnight'];
 
   const handleFrequencySelection = (frequency: string) => {
-    updateBookingData('frequency', frequency); // Update context with selected frequency
+    updateBookingData({ frequency }); // Correctly update context with selected frequency
   };
 
   return (

@@ -21,7 +21,7 @@ const Pets = () => {
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 my-20">
       {/* Header */}
       <h2 className="text-3xl font-semibold text-black text-center mb-6">
         Do you like pets?

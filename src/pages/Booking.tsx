@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useBookingContext } from '../components/BookingContext';
 
 const Booking = () => {
   const [address, setAddress] = useState('');
+  const { bookingData, updateBookingData } = useBookingContext();
   const navigate = useNavigate();
 
   const handleNextStep = () => {
     if (address) {
-      navigate('/domestic-cleaning/booking/services'); // Navigate to services page
+      updateBookingData({ address }); // Update the address in the context
+      navigate('/domestic-cleaning/booking/services'); // Navigate to the services page
     } else {
-      alert('Please enter your address'); // Show alert if address is not entered
+      alert('Please enter your address');
     }
   };
 

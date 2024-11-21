@@ -17,7 +17,8 @@ import Options from './components/BookingSteps/Options';
 import Pets from './components/BookingSteps/Pets';
 import Calendar from './components/BookingSteps/Calender';
 import Hours from './components/BookingSteps/Hours';
-// import Signup from './components/BookingSteps/Signup';
+import Signup from './pages/Signup';
+import BookingSummary from './pages/BookingSummary';
 
 function App() {
   return (
@@ -44,8 +45,9 @@ function App() {
                     <Route path="booking/options" element={<Options />} />
                     <Route path="booking/pets" element={<Pets />} />
                     <Route path="booking/calender" element={<Calendar />} />
-                    <Route path="booking/session/hour" element={<Hours />} />
-                    {/* <Route path="booking/signup" element={<Signup />} /> */}
+                    <Route path="booking/hour" element={<Hours />} />
+                    <Route path='/booking/booking-summary' element={<BookingSummary />} />
+                    <Route path="booking/signup" element={<Signup />} /> 
                     <Route
                       path=""
                       element={
