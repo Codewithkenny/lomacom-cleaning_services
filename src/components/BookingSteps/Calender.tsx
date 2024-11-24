@@ -9,54 +9,57 @@ import {
   subMonths,
   eachDayOfInterval,
   isSameDay,
+  isToday,
   parse,
 } from 'date-fns';
 
 const Calendar = () => {
   const { bookingData, updateBookingData } = useBookingContext();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // Local state for selected date
-  const navigate = useNavigate(); 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const navigate = useNavigate();
 
+  // Retrieve saved date from local storage and bookingData on component mount
+  useEffect(() => {
+    const storedDate = localStorage.getItem('selectedDate');
+    if (storedDate) {
+      setSelectedDate(parse(storedDate, 'yyyy-MM-dd', new Date()));
+    } else if (bookingData.firstAppointmentDate) {
+      setSelectedDate(parse(bookingData.firstAppointmentDate, 'yyyy-MM-dd', new Date()));
+    } else {
+      setSelectedDate(new Date()); // Default to today's date if no data is found
+    }
+  }, [bookingData.firstAppointmentDate]);
+  
+  // Update local storage whenever selectedDate changes
+  useEffect(() => {
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+      localStorage.setItem('selectedDate', formattedDate);
+    }
+  }, [selectedDate]);
+
+  // Navigate to the next step after selecting a date
   const handleNextStep = () => {
-    navigate('/domestic-cleaning/booking/options'); // Navigate to the Duration page
+    if (!selectedDate) {
+      alert('Please select a date before proceeding.');
+      return;
+    }
+    navigate('/domestic-cleaning/booking/hours');
   };
-
-
-  // Get the first and last day of the current month
-  const startOfCurrentMonth = startOfMonth(currentDate);
-  const endOfCurrentMonth = endOfMonth(currentDate);
 
   // Get all days in the current month
-  const daysInMonth = eachDayOfInterval({ start: startOfCurrentMonth, end: endOfCurrentMonth });
-
-  // Handle navigating to the previous month
-  const handlePrevMonth = () => {
-    setCurrentDate(subMonths(currentDate, 1));
-  };
-
-  // Handle navigating to the next month
-  const handleNextMonth = () => {
-    setCurrentDate(addMonths(currentDate, 1));
-  };
+  const daysInMonth = eachDayOfInterval({
+    start: startOfMonth(currentDate),
+    end: endOfMonth(currentDate),
+  });
 
   // Handle selecting a date
   const handleDateSelection = (date: Date) => {
-    setSelectedDate(date); // Set the selected date in local state
-    updateBookingData('firstAppointmentDate', format(date, 'yyyy-MM-dd')); // Update the context
+    const formattedDate = format(date, 'yyyy-MM-dd'); // Ensure the date is formatted as a string
+    setSelectedDate(date);
+    updateBookingData({ firstAppointmentDate: formattedDate });
   };
-
-  // Ensure firstAppointmentDate is valid
-  const firstAppointmentDate = bookingData.firstAppointmentDate
-    ? parse(bookingData.firstAppointmentDate, 'yyyy-MM-dd', new Date())
-    : new Date();
-
-  // Update the selectedDate state when bookingData changes
-  useEffect(() => {
-    if (bookingData.firstAppointmentDate) {
-      setSelectedDate(parse(bookingData.firstAppointmentDate, 'yyyy-MM-dd', new Date()));
-    }
-  }, [bookingData.firstAppointmentDate]);
 
   return (
     <div className="flex flex-col lg:flex-row lg:space-x-6 p-4 bg-gray-50 border rounded-lg max-w-screen-md mx-auto">
@@ -65,7 +68,8 @@ const Calendar = () => {
         {/* Header */}
         <div className="flex justify-between items-center w-full mb-4">
           <button
-            onClick={handlePrevMonth}
+            onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+            aria-label="Previous Month"
             className="w-8 h-8 flex items-center justify-center rounded-full bg-[#00bba3] text-white hover:bg-teal-600 transition-all duration-300"
           >
             &lt;
@@ -74,7 +78,8 @@ const Calendar = () => {
             {format(currentDate, 'MMMM yyyy')}
           </span>
           <button
-            onClick={handleNextMonth}
+            onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+            aria-label="Next Month"
             className="w-8 h-8 flex items-center justify-center rounded-full bg-[#00bba3] text-white hover:bg-teal-600 transition-all duration-300"
           >
             &gt;
@@ -83,14 +88,14 @@ const Calendar = () => {
 
         {/* Days Grid */}
         <div className="grid grid-cols-7 gap-2 text-center w-full">
-          {/* Day headers (Sun, Mon, etc.) */}
+          {/* Day headers */}
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div key={day} className="font-bold text-gray-700">{day}</div>
           ))}
 
           {/* Blank spaces before the first day of the month */}
           {Array.from({ length: daysInMonth[0].getDay() }, (_, i) => (
-            <div key={i} className="text-gray-200"> </div>
+            <div key={`empty-${i}`} className="text-gray-200"> </div>
           ))}
 
           {/* Calendar Dates */}
@@ -98,9 +103,11 @@ const Calendar = () => {
             <div
               key={date.toString()}
               onClick={() => handleDateSelection(date)}
-              className={`cursor-pointer p-3 rounded-full text-center
-                ${isSameDay(date, selectedDate) ? 'bg-[#00bba3] text-white font-bold' : 'text-black'}
-              `}
+              aria-label={format(date, 'MMMM dd, yyyy')}
+              className={`cursor-pointer p-3 rounded-full text-center transition-all duration-300 
+                ${selectedDate && isSameDay(date, selectedDate) ? 'bg-[#00bba3] text-white font-bold' : 'text-black'} 
+                ${isToday(date) ? 'border-2 border-[#00bba3]' : ''}`}
+              
             >
               {format(date, 'd')}
             </div>
@@ -110,24 +117,20 @@ const Calendar = () => {
 
       {/* Confirmation Section */}
       <div className="lg:w-1/2 flex flex-col items-center justify-center">
-        <h2 className="text-lg font-semibold mb-4 text-center">Selected Date</h2>
+        <h2 className="text-lg font-semibold mb-4 text-center">
+          {selectedDate ? 'Your Selected Appointment Date' : 'Select a Date'}
+        </h2>
         <div className="text-xl text-black font-bold">
           {selectedDate ? format(selectedDate, 'MMMM dd, yyyy') : 'No date selected'}
         </div>
         <button
-          onClick={() => alert(`Appointment set for ${format(selectedDate || new Date(), 'MMMM dd, yyyy')}`)}
-          className="w-full max-w-xs mt-6 py-3 bg-[#00bba3] text-white font-semibold rounded-lg hover:bg-teal-600 transition-all duration-300"
-        >
-          Confirm Appointment
-        </button>
-        <button
           onClick={handleNextStep}
-          className="w-full max-w-xs mt-6 py-3 bg-[#00bba3] text-white font-semibold rounded-lg hover:bg-teal-600 transition-all duration-300"
+          disabled={!selectedDate}  // Disable if no date is selected
+          className="w-full max-w-xs mt-6 py-3 bg-[#00bba3] text-white font-semibold rounded-lg hover:bg-teal-600 transition-all duration-300 disabled:opacity-50"
         >
           Next
         </button>
       </div>
-      
     </div>
   );
 };

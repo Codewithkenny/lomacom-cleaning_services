@@ -1,12 +1,21 @@
+import { useEffect } from 'react';
 import { useBookingContext } from '../BookingContext';
 import { useNavigate } from 'react-router-dom';
 
 const Duration = () => {
   const { bookingData, updateBookingData } = useBookingContext();
-  const navigate = useNavigate(); // To handle navigation
+  const navigate = useNavigate();
+
+  // Retrieve saved duration from localStorage on mount
+  useEffect(() => {
+    const savedDuration = localStorage.getItem('bookingDuration');
+    if (savedDuration) {
+      updateBookingData({ duration: savedDuration }); // Update context with saved value
+    }
+  }, [updateBookingData]);
 
   const handleNextStep = () => {
-    navigate('/domestic-cleaning/booking/options'); // Navigate to the Options page
+    navigate('/domestic-cleaning/booking/options');
   };
 
   const durations = [
@@ -15,7 +24,8 @@ const Duration = () => {
 
   // Handle the selection of duration
   const handleDurationSelection = (duration: string) => {
-    updateBookingData({ duration }); // Update context with the selected duration
+    updateBookingData({ duration }); // Update context
+    localStorage.setItem('bookingDuration', duration); // Save to localStorage
   };
 
   return (
@@ -32,7 +42,7 @@ const Duration = () => {
             className={`flex justify-center items-center p-4 border rounded-lg cursor-pointer transition-all duration-300 
               ${bookingData.duration === duration ? 'bg-teal-500 text-white' : 'bg-white text-gray-800'} 
               hover:bg-teal-200`}
-            onClick={() => handleDurationSelection(duration)} // Update context on click
+            onClick={() => handleDurationSelection(duration)} // Update context and localStorage on click
           >
             <span className={`text-xl font-medium`}>
               {duration}

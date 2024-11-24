@@ -8,8 +8,8 @@ type BookingData = {
   duration: string;     // Duration as a string
   options: string[];    // Options as an array of strings
   pets: string;         // Pets as a string (e.g., "Yes" or "No")
-  date: string;         // Date as a string (e.g., "2024-12-01")
-  hours: string;        // Hours as a string (e.g., "2 hours")
+  firstAppointmentDate: string;     // Date as a string (e.g., "2024-12-01")
+  hours: number | ''; // Hours added here      
 };
 
 // Create a context for booking data
@@ -28,7 +28,7 @@ const BookingProvider = ({ children }: { children: React.ReactNode }) => {
     duration: '',
     options: [], // Initialize options as an empty array
     pets: '',
-    date: '',
+    firstAppointmentDate: '',
     hours: '',
   });
 

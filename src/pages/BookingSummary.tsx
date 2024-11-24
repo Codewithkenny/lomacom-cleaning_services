@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHome,
@@ -11,13 +11,36 @@ import {
   faHourglassHalf,
 } from '@fortawesome/free-solid-svg-icons';
 import { useBookingContext } from '../components/BookingContext';
+import { format } from 'date-fns'; // Import date formatting function
 
 const BookingSummary: React.FC = () => {
-  const { bookingData } = useBookingContext();
-  console.log('Services:', bookingData.services);
+  const { bookingData, updateBookingData } = useBookingContext();
+  console.log('Booking summary data:', bookingData);
+
+  // Step 1: Retrieve from localStorage on mount (only if context is empty)
+  useEffect(() => {
+    if (!bookingData || Object.keys(bookingData).length === 0) {
+      const savedBookingData = localStorage.getItem('bookingData');
+      if (savedBookingData) {
+        updateBookingData(JSON.parse(savedBookingData)); // Initialize context with saved data
+      }
+    }
+  }, [bookingData, updateBookingData]);
+
+  // Step 2: Save booking data to localStorage whenever it changes
+  useEffect(() => {
+    if (bookingData && Object.keys(bookingData).length > 0) {
+      localStorage.setItem('bookingData', JSON.stringify(bookingData)); // Store updated data
+    }
+  }, [bookingData]);
 
   const services = Array.isArray(bookingData?.services) ? bookingData?.services : [];
   const options = Array.isArray(bookingData?.options) ? bookingData?.options : [];
+
+  // Handle the date formatting if available
+  const formattedDate = bookingData?.firstAppointmentDate
+    ? format(new Date(bookingData.firstAppointmentDate), 'MMMM dd, yyyy')
+    : 'Date: Not selected';
 
   return (
     <div className="w-full md:w-1/3 p-6 bg-gray-100 rounded-lg">
@@ -51,19 +74,17 @@ const BookingSummary: React.FC = () => {
         {/* Pets */}
         <div>
           <FontAwesomeIcon icon={faPaw} className="mr-2 text-pink-600" />
-          {bookingData?.animals || 'Pets: Not selected'}
+          {bookingData?.pets || 'Pets: Not selected'}
         </div>
-        {/* Dates */}
+        {/* Date */}
         <div>
           <FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-teal-600" />
-          {bookingData?.dates?.length > 0
-            ? `Dates: ${bookingData.dates.join(', ')}`
-            : 'Dates: Not selected'}
+          {formattedDate} {/* Display formatted date or fallback */}
         </div>
         {/* Hours */}
         <div>
           <FontAwesomeIcon icon={faHourglassHalf} className="mr-2 text-indigo-600" />
-          {bookingData?.hours || 'Hours: Not selected'}
+          {bookingData?.hours ? `Hours: ${bookingData?.hours}` : 'Hours: Not selected'}
         </div>
       </div>
     </div>

@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
             <h3 className="text-xl font-bold mb-4">Contact Us</h3>
             <ul className="space-y-2">
               <li>Phone: 07769 622171</li>
-              <li>Email: support@lomacomservices.com</li>
+              <li>Email: lomacom@mail.co.uk</li>
               <li>Address: 3 Monkwood Drive, Manchester, M9 4BB</li>
             </ul>
           </div>

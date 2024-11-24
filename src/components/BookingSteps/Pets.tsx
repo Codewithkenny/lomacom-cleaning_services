@@ -1,12 +1,21 @@
 import { useBookingContext } from '../BookingContext';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Pets = () => {
   const { bookingData, updateBookingData } = useBookingContext();
   const navigate = useNavigate(); // For navigation to the next page
 
+  // Load pet preference from localStorage if it exists
+  useEffect(() => {
+    const savedPetPreference = localStorage.getItem('pets');
+    if (savedPetPreference) {
+      updateBookingData({ pets: savedPetPreference });
+    }
+  }, [updateBookingData]);
+
   const handleNextStep = () => {
-    navigate('/domestic-cleaning/booking/calender'); // Navigate to the next step (Summary page)
+    navigate('/domestic-cleaning/booking/calender');
   };
 
   // Options for pets
@@ -16,8 +25,8 @@ const Pets = () => {
   ];
 
   const handleOptionSelection = (option: string) => {
-    // Update booking data context with selected pet preference
-    updateBookingData('pets', option);
+    updateBookingData({ pets: option });
+    localStorage.setItem('pets', option); // Save to localStorage
   };
 
   return (
@@ -37,7 +46,11 @@ const Pets = () => {
             onClick={() => handleOptionSelection(option.name)}
           >
             <span className="text-4xl mb-2">{option.icon}</span>
-            <span className={`text-xl font-medium ${bookingData.pets === option.name ? 'text-white' : 'text-gray-800'}`}>
+            <span
+              className={`text-xl font-medium ${
+                bookingData.pets === option.name ? 'text-white' : 'text-gray-800'
+              }`}
+            >
               {option.name}
             </span>
           </div>
@@ -45,13 +58,13 @@ const Pets = () => {
       </div>
 
       {/* Next Button */}
-      <div className='flex justify-center'>
-      <button
-        onClick={handleNextStep}
-        className="w-full max-w-xs mt-6 py-3 bg-[#00bba3] text-white font-semibold rounded-lg hover:bg-teal-600 transition-all duration-300 mx-auto"
-      >
-        Next
-      </button>
+      <div className="flex justify-center">
+        <button
+          onClick={handleNextStep}
+          className="w-full max-w-xs mt-6 py-3 bg-[#00bba3] text-white font-semibold rounded-lg hover:bg-teal-600 transition-all duration-300 mx-auto"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

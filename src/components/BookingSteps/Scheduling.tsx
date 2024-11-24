@@ -1,5 +1,6 @@
 import { useBookingContext } from '../BookingContext';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Scheduling = () => {
   const { bookingData, updateBookingData } = useBookingContext();
@@ -14,7 +15,16 @@ const Scheduling = () => {
 
   const handleFrequencySelection = (frequency: string) => {
     updateBookingData({ frequency }); // Correctly update context with selected frequency
+    localStorage.setItem('bookingFrequency', frequency); // Store selected frequency in localStorage
   };
+
+  // Fetch the stored frequency from localStorage when the component mounts
+  useEffect(() => {
+    const storedFrequency = localStorage.getItem('bookingFrequency');
+    if (storedFrequency) {
+      updateBookingData({ frequency: storedFrequency });
+    }
+  }, [updateBookingData]);
 
   return (
     <div className="px-4 py-6">
@@ -40,12 +50,14 @@ const Scheduling = () => {
       </div>
 
       {/* Next Button */}
-      <button
-        onClick={handleNextStep}
-        className="w-full max-w-xs mt-6 py-3 bg-[#00bba3] text-white font-semibold rounded-lg hover:bg-teal-600 transition-all duration-300 mx-auto"
-      >
-        Next
-      </button>
+      <div className="flex justify-center">
+        <button
+          onClick={handleNextStep}
+          className="w-full max-w-xs mt-6 py-3 bg-[#00bba3] text-white font-semibold rounded-lg hover:bg-teal-600 transition-all duration-300 mx-auto"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

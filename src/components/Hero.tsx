@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 
 const Hero: React.FC = () => {
@@ -21,9 +22,11 @@ const Hero: React.FC = () => {
           <p className="mb-6 text-lg">
             Experience top-quality cleaning services tailored to your needs.
           </p>
+          <Link to='/domestic-cleaning'>
           <button className="bg-[#00bba3] text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-[#007c6c]">
             Book My Cleaning
           </button>
+          </Link>
         </div>
 
         {/* Right Content */}

@@ -17,12 +17,15 @@ import Options from './components/BookingSteps/Options';
 import Pets from './components/BookingSteps/Pets';
 import Calendar from './components/BookingSteps/Calender';
 import Hours from './components/BookingSteps/Hours';
-import Signup from './pages/Signup';
+// import Signup from './pages/Signup';
 import BookingSummary from './pages/BookingSummary';
+import Register from './pages/Register';
 
 function App() {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? 'fallback-client-id';
+
   return (
-    <GoogleOAuthProvider clientId="your-google-client-id">
+    <GoogleOAuthProvider clientId={googleClientId}>
       <Router>
         <div>
           <Header />
@@ -45,9 +48,10 @@ function App() {
                     <Route path="booking/options" element={<Options />} />
                     <Route path="booking/pets" element={<Pets />} />
                     <Route path="booking/calender" element={<Calendar />} />
-                    <Route path="booking/hour" element={<Hours />} />
-                    <Route path='/booking/booking-summary' element={<BookingSummary />} />
-                    <Route path="booking/signup" element={<Signup />} /> 
+                    <Route path="booking/hours" element={<Hours />} />
+                    <Route path="booking/booking-summary" element={<BookingSummary />} />
+                    {/* <Route path="booking/signup" element={<Signup />} /> */}
+                    
                     <Route
                       path=""
                       element={
@@ -64,6 +68,8 @@ function App() {
 
             {/* Login */}
             <Route path="/login" element={<><Login /><Footer /></>} />
+            {/* <Route path="/signup" element={<><Signup /><Footer /></>} /> */}
+            <Route path="/register" element={<><Register /><Footer /></>} />
           </Routes>
         </div>
       </Router>

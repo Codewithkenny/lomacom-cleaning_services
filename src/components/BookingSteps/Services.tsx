@@ -1,11 +1,12 @@
 import { useBookingContext } from '../BookingContext';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Services = () => {
   const { bookingData, updateBookingData } = useBookingContext();
   const navigate = useNavigate();
 
-  // Define servicesData here
+  // Services data (you can replace this with dynamic data if needed)
   const servicesData = [
     {
       id: '1',
@@ -45,26 +46,43 @@ const Services = () => {
   ];
 
   const handleServicesSelection = (service: string) => {
-    // Check if the service is already selected
-    const isServiceSelected = bookingData.services.includes(service);
+    // Update booking data state using the current state
+    updateBookingData((prevBookingData) => {
+      const isServiceSelected = prevBookingData.services.includes(service);
+      const updatedServices = isServiceSelected
+        ? prevBookingData.services.filter((s) => s !== service)
+        : [...prevBookingData.services, service];
 
-    // Update the services array
-    if (isServiceSelected) {
-      // If the service is selected, remove it from the array
-      updateBookingData({ services: bookingData.services.filter((s) => s !== service) });
-    } else {
-      // If the service is not selected, add it to the array
-      updateBookingData({ services: [...bookingData.services, service] });
-    }
+      // Return the updated state for the context
+      return {
+        ...prevBookingData,
+        services: updatedServices,
+      };
+    });
   };
 
+  // Handle the 'Next' button click
   const handleNextStep = () => {
     if (bookingData.services.length > 0) {
-      navigate('/domestic-cleaning/booking/scheduling'); // Navigate to scheduling page if services are selected
+      navigate('/domestic-cleaning/booking/scheduling');
     } else {
-      alert('Please select at least one service'); // Alert if no service is selected
+      alert('Please select at least one service');
     }
   };
+
+  // Sync localStorage whenever bookingData changes
+  useEffect(() => {
+    localStorage.setItem('bookingData', JSON.stringify(bookingData));
+  }, [bookingData]); // Sync localStorage whenever bookingData changes
+
+  // Check localStorage for saved data on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('bookingData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      updateBookingData(parsedData);  // Update context with saved data
+    }
+  }, [updateBookingData]); // Run only once on mount
 
   return (
     <>
@@ -73,14 +91,14 @@ const Services = () => {
       </h2>
 
       {/* Service List (grid layout for cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 ml-4 my-20"> {/* Grid layout with responsive columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 ml-4 my-20">
         {servicesData.map((serviceItem) => (
           <div
             key={serviceItem.id}
-            className={`flex flex-col items-center justify-between p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-teal-100 hover:shadow-lg transition-all duration-300 w-[200px] mx-auto ${ // Reduced width and padding
+            className={`flex flex-col items-center justify-between p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-teal-100 hover:shadow-lg transition-all duration-300 w-[200px] mx-auto ${
               bookingData.services.includes(serviceItem.name) ? 'bg-teal-100' : ''
             }`}
-            onClick={() => handleServicesSelection(serviceItem.name)} // Use the handler to update the selection
+            onClick={() => handleServicesSelection(serviceItem.name)} // Update context
           >
             {/* Service Thumbnail */}
             <img
