@@ -20,6 +20,7 @@ import Hours from './components/BookingSteps/Hours';
 // import Signup from './pages/Signup';
 import BookingSummary from './pages/BookingSummary';
 import Register from './pages/Register';
+import CustomerArea from './pages/CustomerArea';
 
 function App() {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? 'fallback-client-id';
@@ -70,6 +71,7 @@ function App() {
             <Route path="/login" element={<><Login /><Footer /></>} />
             {/* <Route path="/signup" element={<><Signup /><Footer /></>} /> */}
             <Route path="/register" element={<><Register /><Footer /></>} />
+            <Route path="/customer-area" element={<><CustomerArea /><Footer /></>} />
           </Routes>
         </div>
       </Router>

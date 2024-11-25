@@ -38,10 +38,10 @@ const Register = () => {
       localStorage.setItem('user', JSON.stringify(user));
 
       // Show success message (can use a toast notification library)
-      alert(`Welcome, ${user.firstName}! Your account was successfully created.`);
+      alert(`Welcome, ${user.username}! Your account was successfully created.`);
 
       // Redirect to the booking summary page
-      navigate('/booking-summary');
+      navigate('booking/booking-summary');
     } catch (err: any) {
       setError(err.response?.data?.message || 'An error occurred during sign-up');
     } finally {
